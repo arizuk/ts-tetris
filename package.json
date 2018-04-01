@@ -1,0 +1,19 @@
+{
+  "name": "ts-tetris",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "ts-loader": "^4.1.0",
+    "typescript": "^2.8.1",
+    "webpack": "^4.4.1",
+    "webpack-cli": "^2.0.13"
+  },
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack -w"
+  },
+  "author": "",
+  "license": "ISC"
+}
