@@ -1,8 +1,9 @@
+
+import "./app.scss"
+
 const canvas = document.createElement('canvas')
-canvas.style.width = "400px"
-canvas.style.height = "400px"
+canvas.setAttribute("id", "canvas")
 document.body.appendChild(canvas)
-console.log('append child')
 
 const ctx = canvas.getContext('2d')
 ctx.beginPath()
