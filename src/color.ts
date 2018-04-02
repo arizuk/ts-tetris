@@ -1,4 +1,4 @@
-enum Color {
+export enum Color {
   Red,
   Yellow,
   Magenta,
@@ -7,4 +7,13 @@ enum Color {
   Green,
   Orange,
 }
-export default Color
+
+export const cssColor = {
+  [Color.Red]: 'red',
+  [Color.Yellow]: 'yellow',
+  [Color.Magenta]: 'magenta',
+  [Color.Blue]: 'blue',
+  [Color.Cyan]: 'cyan',
+  [Color.Green]: 'green',
+  [Color.Orange]: 'orange',
+};

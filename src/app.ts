@@ -1,14 +1,15 @@
 import './app.scss';
 import Game from './game';
-import htmlRenderer from './htmlRenderer';
+import gameRenderer from './gameRenderer';
+import rotateRenderer from './rotateRenderer';
 
 const game = new Game()
 game.init()
-htmlRenderer.init(game);
+gameRenderer.init();
 
 const FPS = 3;
 const gameLoop = () => {
   game.update();
-  htmlRenderer.update();
+  gameRenderer.update(game);
 };
 setInterval(gameLoop, 1000/FPS);

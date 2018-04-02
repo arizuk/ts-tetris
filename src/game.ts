@@ -1,6 +1,6 @@
-import { shuffle } from 'lodash'
-import tetraminos from './tetraminos'
-import { Tetramino } from './tetraminos'
+import { shuffle } from 'lodash';
+import { tetraminos, Tetramino } from './tetraminos';
+import { rotate } from './rotate';
 
 export interface Pos {
   x: number;
@@ -20,50 +20,56 @@ class PosImpl implements Pos {
 }
 
 class TetraminoStateImpl implements TetraminoState {
-  constructor(public pos: Pos, private tetramino: Tetramino) {}
-
-  get index() : Tetramino['index'] {
-    return this.tetramino.index;
+  private rotation: number;
+  constructor(public pos: Pos, private tetramino: Tetramino, rotation = 0) {
+    this.rotation = rotation % 4;
   }
 
-  get color() : Tetramino['color'] {
+  get type() {
+    return this.tetramino.type;
+  }
+
+  get color() {
     return this.tetramino.color;
   }
 
-  get tiles() : Tetramino['tiles'] {
-    return this.tetramino.tiles;
+  get tiles() {
+    return this.tetramino.tiles.map(t => rotate(t as [number, number], this.rotation));
+  }
+
+  move(dx: number, dy: number) : TetraminoStateImpl {
+    const pos = this.pos.move(dx, dy);
+    return new TetraminoStateImpl(pos, this.tetramino, this.rotation);
+  }
+
+  rotate() : TetraminoStateImpl {
+    return new TetraminoStateImpl(this.pos, this.tetramino, this.rotation + 1);
   }
 }
 
 class Game {
   public next: Tetramino;
-  public tetraminos: TetraminoState[];
+  public current: TetraminoStateImpl;
   public gridSize: [number, number];
 
   constructor() {
     this.gridSize = [10, 20];
-    this.tetraminos = [];
   }
 
   init() {
     const seq = shuffle(tetraminos);
     this.next = seq[0];
-    this.tetraminos.push(
-      new TetraminoStateImpl(this.initialPos(), seq[1])
-    )
-  }
-
-  get current() {
-    return this.tetraminos[this.tetraminos.length-1];
+    this.current = new TetraminoStateImpl(this.initialPos(), seq[1]);
   }
 
   update() {
-    const pos = this.current.pos
-    this.current.pos = pos.move(0, 1);
+    this.current = this.current.move(0, 1);
+    this.current = this.current.rotate();
   }
 
   private initialPos() : Pos {
-    return new PosImpl(this.gridSize[0]/2, 0);
+    return new PosImpl(this.gridSize[0] / 2, 0);
   }
 }
-export default Game
+
+export default Game;
