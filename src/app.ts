@@ -1,15 +1,14 @@
+import './app.scss';
+import Game from './game';
+import htmlRenderer from './htmlRenderer';
 
-import "./app.scss"
+const game = new Game()
+game.init()
+htmlRenderer.init(game);
 
-const canvas = document.createElement('canvas')
-canvas.setAttribute("id", "canvas")
-document.body.appendChild(canvas)
-
-const ctx = canvas.getContext('2d')
-ctx.beginPath()
-ctx.moveTo(20, 20)
-ctx.lineTo(120, 20)
-ctx.lineTo(120, 120)
-ctx.lineTo(20, 120)
-ctx.closePath()
-ctx.stroke()
+const FPS = 3;
+const gameLoop = () => {
+  game.update();
+  htmlRenderer.update();
+};
+setInterval(gameLoop, 1000/FPS);
