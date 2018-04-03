@@ -1,6 +1,11 @@
 import { Color, cssColor } from './color';
 import Game, { TetraminoState } from './game';
 
+interface TileSize {
+  w: number;
+  h: number;
+}
+
 class GameRenderer {
   private canvas : HTMLCanvasElement;
   private debugPanel : HTMLElement;
@@ -42,10 +47,31 @@ class GameRenderer {
     });
   }
 
+  private drawTile(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    ts: TileSize,
+    tileColor: Color,
+  ) {
+    ctx.fillStyle = cssColor[tileColor];
+    ctx.fillRect(x * ts.w, y * ts.h, ts.w, ts.h);
+    ctx.strokeStyle = '#333';
+    ctx.strokeRect(x * ts.w + 3, y * ts.h + 3, ts.w - 6, ts.h - 6);
+    ctx.strokeStyle = '#000';
+    ctx.strokeRect(x * ts.w, y * ts.h, ts.w, ts.h);
+  }
+
+  private drawBlank(ctx: CanvasRenderingContext2D, x: number, y: number, ts: TileSize) {
+    ctx.clearRect(x * ts.w, y * ts.h, ts.w, ts.h);
+    ctx.strokeStyle = '#444';
+    ctx.strokeRect(x * ts.w, y * ts.h, ts.w, ts.h);
+  }
+
   update(game: Game) {
     const ctx = this.canvas.getContext('2d');
 
-    const bs = {
+    const ts = {
       w: this.canvasSize[0] / game.gridSize[0],
       h: this.canvasSize[1] / game.gridSize[1],
     };
@@ -53,24 +79,20 @@ class GameRenderer {
     game.grid.forEach((row, y) => {
       row.forEach((color, x) => {
         if (color !== Color.None) {
-          ctx.fillStyle = cssColor[color];
-          ctx.fillRect(x * bs.w, y * bs.h, bs.w, bs.h);
+          this.drawTile(ctx, x, y, ts, color);
         } else {
-          ctx.clearRect(x * bs.w, y * bs.h, bs.w, bs.h);
+          this.drawBlank(ctx, x, y, ts);
         }
-        ctx.strokeRect(x * bs.w, y * bs.h, bs.w, bs.h);
       });
     });
 
     const current : TetraminoState = game.current;
-    ctx.fillStyle = cssColor[current.color];
     current.tiles.forEach((tile) => {
       const [x, y] = tile;
-      ctx.fillRect(x * bs.w, y * bs.h, bs.w, bs.h);
-      ctx.strokeRect(x * bs.w, y * bs.h, bs.w, bs.h);
+      this.drawTile(ctx, x, y, ts, current.color);
     });
 
-    this.debug(game);
+    // this.debug(game);
   }
 }
 
