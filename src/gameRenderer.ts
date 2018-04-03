@@ -50,19 +50,22 @@ class GameRenderer {
       h: this.canvasSize[1] / game.gridSize[1],
     };
 
-    // background
-    for (let i = 0; i < game.gridSize[0]; i += 1) {
-      for (let j = 0; j < game.gridSize[1]; j += 1) {
-        ctx.clearRect(i * bs.w, j * bs.h, bs.w, bs.h);
-        ctx.strokeRect(i * bs.w, j * bs.h, bs.w, bs.h);
-      }
-    }
+    game.grid.forEach((row, y) => {
+      row.forEach((color, x) => {
+        if (color !== Color.None) {
+          ctx.fillStyle = cssColor[color];
+          ctx.fillRect(x * bs.w, y * bs.h, bs.w, bs.h);
+        } else {
+          ctx.clearRect(x * bs.w, y * bs.h, bs.w, bs.h);
+        }
+        ctx.strokeRect(x * bs.w, y * bs.h, bs.w, bs.h);
+      });
+    });
 
     const current : TetraminoState = game.current;
     ctx.fillStyle = cssColor[current.color];
     current.tiles.forEach((tile) => {
-      const x = current.pos.x + tile[0];
-      const y = current.pos.y + tile[1];
+      const [x, y] = tile;
       ctx.fillRect(x * bs.w, y * bs.h, bs.w, bs.h);
       ctx.strokeRect(x * bs.w, y * bs.h, bs.w, bs.h);
     });

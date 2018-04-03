@@ -2,10 +2,10 @@ type Pos = [number, number];
 
 export const rotate = (pos: Pos, rotation: number) : Pos => {
   let [x, y] = pos;
-  for (let i = 0; i < rotation; i++) {
-    let x_ = x;
+  for (let i = 0; i < rotation; i += 1) {
+    const tmp = x;
     x = -y;
-    y = x_;
+    y = tmp;
   }
   return [x, y];
-}
+};

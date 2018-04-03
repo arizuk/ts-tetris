@@ -1,4 +1,5 @@
 export enum Color {
+  None,
   Red,
   Yellow,
   Magenta,
